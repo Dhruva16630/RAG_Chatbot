@@ -7,12 +7,12 @@ from google.genai import types
 
 # CONFIG
 PDF_PATH = "F1Data.pdf"
-MONGO_URI = "mongodb+srv://yuouteb1616:jDG9rlcGjAzd06Fn@f1chat.kuwbe1d.mongodb.net/"
+MONGO_URI = ""
 DB_NAME = "f1_rag"
 COLLECTION = "docs"
 
-#genai.configure(api_key="AIzaSyBk7A3kzpyjSkvkEx4BXBI20jRgKtsGl14")
-client = genai.Client(api_key="AIzaSyD2iE4DklPfm4nHbaqrDEG48-R1V8ctOX4")
+
+client = genai.Client(api_key="")
 
 # 1. Extract
 def extract_pdf_text(file_path):

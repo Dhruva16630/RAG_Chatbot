@@ -17,12 +17,12 @@ def get_embedding(text):
     )
     return [float(x) for x in response.embeddings[0].values]
 
-print(len(get_embedding("test")))
-query_emb = get_embedding("2026 F1 rules")
+#print(len(get_embedding("test")))
+#query_emb = get_embedding("2026 F1 rules")
 
-print(type(query_emb))
-print(type(query_emb[0]))
-print(len(query_emb))
+# print(type(query_emb))
+# print(type(query_emb[0]))
+# print(len(query_emb))
 
 def search(query):
     query_emb = get_embedding(query)
@@ -33,7 +33,7 @@ def search(query):
                 "index": "vector_index",
                 "path": "embedding",
                 "queryVector": query_emb,
-                "numCandidates": 1500,
+                "numCandidates": 900,
                 "limit": 5
             }
         },
@@ -47,13 +47,13 @@ def search(query):
 
     return list(results)
 
-doc = collection.find_one()
+# doc = collection.find_one()
 
-print("Stored vector length:", len(doc["embedding"]))
-print("Stored sample:", doc["embedding"][:5])
+# print("Stored vector length:", len(doc["embedding"]))
+# print("Stored sample:", doc["embedding"][:5])
 
-query_emb = get_embedding("2026 F1 rules")
-print("Query sample:", query_emb[:5])
+# query_emb = get_embedding("2026 F1 rules")
+# print("Query sample:", query_emb[:5])
 
 # if __name__ == "__main__":
 #     results = search("2026 F1 schedule")
@@ -62,12 +62,12 @@ print("Query sample:", query_emb[:5])
 #         print(r["text"])
 #         print("Score:", r["score"])
 
-print(collection.count_documents({}))
-doc = collection.find_one()
-print(doc.keys())
+# print(collection.count_documents({}))
+# doc = collection.find_one()
+# print(doc.keys())
 
-print(type(doc["embedding"][0]))  # 👈 ADD THIS
-print(doc["embedding"][:5])   
+# print(type(doc["embedding"][0]))  # 👈 ADD THIS
+# print(doc["embedding"][:5])   
 
 if __name__ == "__main__":
     results = search("2026 F1 new power units")
