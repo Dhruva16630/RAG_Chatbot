@@ -1,7 +1,6 @@
-
 import { useState } from "react";
+import Loader from "./components/Loader";
 
-// ✅ define types
 type Message = {
   role: "user" | "bot";
   text: string;
@@ -16,7 +15,7 @@ function App() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "bot",
-      text: "Hi 👋 I am your F1 ChatBot Assistant. Ask me anything about Formula 1!",
+      text: "I am your F1 ChatBot Assistant. Ask me about updated 2026 rules",
     },
   ]);
   const [query, setQuery] = useState("");
@@ -40,16 +39,10 @@ function App() {
         body: JSON.stringify({ query }),
       });
 
-      // ✅ type the response
-      // const data: { results: Result[] } = await res.json();
-
-      // const botReply =
-      //   data.results?.map((r: Result) => r.text).join("\n\n") ||
-      //   "No relevant information found....djbgfgdcndhvg";
       const data: { answer: string; sources: Result[] } = await res.json();
 
-      const botReply =
-        data.answer || "⚠️ No response from server";
+      const botReply = data.answer || "No response from server";
+
       setMessages((prev) => [
         ...prev,
         { role: "bot", text: botReply },
@@ -57,7 +50,7 @@ function App() {
     } catch (err) {
       setMessages((prev) => [
         ...prev,
-        { role: "bot", text: "⚠️ Error fetching response" },
+        { role: "bot", text: " Error fetching response" },
       ]);
     }
 
@@ -65,66 +58,54 @@ function App() {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "700px",
-        margin: "auto",
-        padding: "20px",
-        fontFamily: "Arial",
-      }}
-    >
-      <h2>🏎️ F1 ChatBot</h2>
+    <div className="min-h-screen bg-[#0f172a] text-white flex flex-col">
+      <div className="sticky top-0 z-10 bg-[#0f172a] text-center py-4 text-xl font-semibold border-b border-gray-700">
+        F1 ChatBot
+      </div>
 
-      <div
-        style={{
-          border: "1px solid #ccc",
-          padding: "15px",
-          height: "400px",
-          overflowY: "auto",
-          marginBottom: "10px",
-        }}
-      >
+      <div className="flex-1 px-4 py-6 space-y-6 max-w-3xl w-full mx-auto">
         {messages.map((msg, i) => (
           <div
             key={i}
-            style={{
-              textAlign: msg.role === "user" ? "right" : "left",
-              marginBottom: "10px",
-            }}
+            className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"
+              }`}
           >
-            <span
-              style={{
-                display: "inline-block",
-                padding: "10px",
-                borderRadius: "10px",
-                background:
-                  msg.role === "user" ? "#007bff" : "#f1f1f1",
-                color: msg.role === "user" ? "white" : "black",
-                maxWidth: "70%",
-              }}
+            <div
+              className={`px-4 py-3 rounded-2xl max-w-[75%] text-sm leading-relaxed ${msg.role === "user"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-700 text-gray-100"
+                }`}
             >
               {msg.text}
-            </span>
+            </div>
           </div>
         ))}
 
-        {loading && <p>Bot is typing...</p>}
+        {loading && (
+          <div className="flex justify-start">
+            <Loader />
+          </div>
+        )}
       </div>
+      <div className="border-t border-gray-700 p-4 bg-[#0f172a] sticky bottom-0">
+        <div className="max-w-3xl mx-auto flex gap-3">
+          <input
+            className="flex-1 bg-gray-800 border border-gray-600 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Ask about F1..."
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSend();
+            }}
+          />
 
-      <div style={{ display: "flex" }}>
-        <input
-          style={{ flex: 1, padding: "10px" }}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Ask about F1..."
-          onKeyDown={(e) => {
-            if (e.key === "Enter") handleSend();
-          }}
-        />
-
-        <button onClick={handleSend} style={{ padding: "10px" }}>
-          Send
-        </button>
+          <button
+            onClick={handleSend}
+            className="bg-blue-500 px-5 py-3 rounded-xl hover:bg-blue-600 transition"
+          >
+            Send
+          </button>
+        </div>
       </div>
     </div>
   );
